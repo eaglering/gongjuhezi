@@ -1,11 +1,18 @@
 <section class="content-header">
+    {if !empty($breadcrumb)}
+    {assign name="last" value="$breadcrumb|last" /}
     <h1>
-        Simple Tables
-        <small>preview of simple tables</small>
+        {$last.title}
+        <small>{$last.subtitle}</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Tables</a></li>
-        <li class="active">Simple</li>
+        {foreach $breadcrumb as $item}
+        {if $item == $last}
+        <li class="active">{$item.title}</li>
+        {else /}
+        <li><a href="{$item.index|u}"><i class="fa {$item.icon}"></i> {$item.title}</a></li>
+        {/if}
+        {/foreach}
     </ol>
+    {/if}
 </section>

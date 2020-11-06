@@ -7,6 +7,13 @@ use app\backend\facade\Auth;
 
 class MenuService
 {
+    protected $menus;
+
+    public function __construct()
+    {
+        $this->menus = config('menus');
+    }
+
     /**
      * 后台菜单配置
      * @param $routeUri
@@ -16,10 +23,53 @@ class MenuService
      */
     public function getMenus($routeUri, $group)
     {
-        // 菜单列表数据
-        $menus = config('menus');
+        $menus = $this->menus;
         $this->first($menus, $routeUri, $group);
         return $menus;
+    }
+
+    /**
+     * 获取面包屑
+     * @param $routeUri
+     * @param $group
+     * @return array
+     */
+    public function getBreadcrumb($routeUri, $group)
+    {
+        if (empty($this->menus[$group])) return [];
+        return $this->getSubBreadcrumb($this->menus[$group], $routeUri);
+    }
+
+    protected function getSubBreadcrumb($menus, $routeUri) {
+        $breadcrumb = [$this->getAttribute($menus)];
+        if (!empty($menus['index']) && $menus['index'] == $routeUri) {
+            return $breadcrumb;
+        }
+        if (!empty($menus['uris'])) {
+            foreach ($menus['uris'] as $index => $item) {
+                if ($index == $routeUri) {
+                    $breadcrumb[] = $this->getAttribute($item);
+                    return $breadcrumb;
+                }
+            }
+        }
+        if (!empty($menus['submenu'])) {
+            foreach ($menus['submenu'] as $subMenu) {
+                $subBreadcrumb = $this->getSubBreadcrumb($subMenu, $routeUri);
+                if ($subBreadcrumb) {
+                    return array_merge($breadcrumb, $subBreadcrumb);
+                }
+            }
+        }
+        return [];
+    }
+
+    protected function getAttribute($menus)
+    {
+        return [
+            'icon' => $menus['icon'] ?? '', 'title' => $menus['title'] ?? '',
+            'index' => $menus['index'] ?? '', 'subtitle' => $menus['subtitle'] ?? ''
+        ];
     }
 
     /**
@@ -29,7 +79,7 @@ class MenuService
      * @param $group
      * @throws \Casbin\Exceptions\CasbinException
      */
-    private function first(&$menus, $routeUri, $group)
+    protected function first(&$menus, $routeUri, $group)
     {
         foreach ($menus as $key => &$first) {
             // 一级菜单索引url
@@ -55,7 +105,7 @@ class MenuService
      * @param $routeUri
      * @throws \Casbin\Exceptions\CasbinException
      */
-    public function second(&$menus, $routeUri)
+    protected function second(&$menus, $routeUri)
     {
         foreach ($menus as $key => &$second) {
             // 二级菜单索引url
@@ -72,10 +122,12 @@ class MenuService
             if (isset($second['submenu'])) {
                 $this->third($second['submenu'], $routeUri, $secondUris);
             } else {
-                if (isset($second['uris']))
-                    $secondUris = array_merge($secondUris, $second['uris']);
-                else
+                if (isset($second['index'])) {
                     $secondUris[] = $second['index'];
+                }
+                if (isset($second['uris'])) {
+                    $secondUris = array_merge($secondUris, array_keys($second['uris']));
+                }
             }
             // 二级菜单：active
             !isset($second['active']) && $second['active'] = in_array($routeUri, $secondUris);
@@ -91,7 +143,7 @@ class MenuService
      * @param $secondUris
      * @throws \Casbin\Exceptions\CasbinException
      */
-    private function third(&$menus, $routeUri, &$secondUris)
+    protected function third(&$menus, $routeUri, &$secondUris)
     {
         foreach ($menus as $key => &$third) {
             // 三级菜单索引url
@@ -104,12 +156,14 @@ class MenuService
             }
             // 三级菜单所有uri
             $thirdUris = [];
-            if (isset($third['uris'])) {
-                $secondUris = array_merge($secondUris, $third['uris']);
-                $thirdUris = array_merge($thirdUris, $third['uris']);
-            } else {
+            if (isset($third['index'])) {
                 $secondUris[] = $third['index'];
                 $thirdUris[] = $third['index'];
+            }
+            if (isset($third['uris'])) {
+                $uris = array_keys($third['uris']);
+                $secondUris = array_merge($secondUris, $uris);
+                $thirdUris = array_merge($thirdUris, $uris);
             }
             $third['active'] = in_array($routeUri, $thirdUris);
         }
@@ -121,7 +175,7 @@ class MenuService
      * @param int $level
      * @return array|null
      */
-    private function getMenusIndexUrls(&$menus, $level = 1)
+    protected function getMenusIndexUrls(&$menus, $level = 1)
     {
 //        // 三级
 //        if ($level === 3) {
@@ -150,7 +204,7 @@ class MenuService
      * @return bool
      * @throws \Casbin\Exceptions\CasbinException
      */
-    private function getAuthUrl($urls)
+    protected function getAuthUrl($urls)
     {
         // 取出通过权限验证urk作为index
         foreach ($urls as $url) {

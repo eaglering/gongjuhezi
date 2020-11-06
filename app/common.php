@@ -74,27 +74,15 @@ if (!function_exists('gjhz_crypt')) {
     }
 }
 
-if (!function_exists('getRouteInfo')) {
+if (!function_exists('u')) {
     /**
-     * @return array
+     * 输出url
+     * @param $url
+     * @param string $default
+     * @return mixed|string|\think\route\Url
      */
-    function getRouteInfo() {
-        $prefix = strlen(\think\facade\Request::rootUrl());
-        $result = trim(substr(\think\facade\Request::baseUrl(), $prefix), '/');
-        $result = explode('/', $result);
-
-        // 获取控制器名
-        $controller = strip_tags(!empty($result[0]) ? $result[0] : config('route.default_controller'));
-
-        // 获取操作名
-        $action = strip_tags(!empty($result[1]) ? $result[1] : config('route.default_action'));
-
-        // 控制器分组 (用于定义所属模块)
-        $groupStr = strstr($controller, '.', true);
-        $group = $groupStr !== false ? $groupStr : $controller;
-        // 当前url
-        $url = $controller . '/' . $action;
-        return compact('controller', 'action', 'url', 'group');
+    function u($url, $default = 'javascript:void(0)') {
+        return $url ? url($url) : $default;
     }
 }
 

@@ -18,23 +18,36 @@ abstract class Base extends Controller
         'passport/login'
     ];
 
+    /**
+     * @throws \Casbin\Exceptions\CasbinException
+     */
     public function initialize()
     {
         $this->getRouteInfo();
         $this->layout();
     }
 
+    /**
+     * 获取布局数据
+     * @throws \Casbin\Exceptions\CasbinException
+     */
     protected function layout()
     {
         if (!$this->request->isAjax()) {
             !in_array($this->routeUri, $this->noLayoutAction) && View::config(['layout_on' => true]);
             $module = $this->app->http->getName();
+            $identifier = $this->request->middleware('identifier');
+            if ($identifier && empty($identifier['avatar'])) {
+                $identifier['avatar'] = "/static/{$module}/img/user" . rand(1, $identifier['id'] % 8 + 1) . '.jpg';
+            }
             View::assign([
                 'base_url' => '/' . $module,
                 'core_asset' => '/static',
                 'base_asset' => '/static/' . $module,
                 'upload_url' => '/uploads',
-                'menus' => $this->menus()
+                'menus' => $this->menus(),
+                'user' => $identifier,
+                'breadcrumb' => $this->breadcrumb()
             ]);
         }
     }
@@ -55,12 +68,29 @@ abstract class Base extends Controller
         $this->routeUri = $this->controller . '/' . $this->action;
     }
 
+    /**
+     * 获取菜单
+     * @return array
+     * @throws \Casbin\Exceptions\CasbinException
+     */
     protected function menus() {
         static $menus = [];
         if (empty($menus)) {
             $menus = Menu::getMenus($this->routeUri, $this->group);
         }
         return $menus;
+    }
+
+    /**
+     * 获取面包屑
+     * @return array
+     */
+    protected function breadcrumb() {
+        static $breadcrumb = [];
+        if (empty($breadcrumb)) {
+            $breadcrumb = Menu::getBreadcrumb($this->routeUri, $this->group);
+        }
+        return $breadcrumb;
     }
 
     protected function renderError($msg, $data = [], $url = null, $code = 0)
