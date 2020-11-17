@@ -95,7 +95,7 @@ if (!function_exists('fnRet')) {
      * @param bool $scope
      * @return array
      */
-    function fnRet($success, $msg = '', $data = [], $code = 0, $scope = true)
+    function fnRet($success, $msg = '', $data = [], $code = 0, $scope = false)
     {
         $resData = compact('success', 'msg', 'data', 'code');
         if ($scope) {
@@ -107,5 +107,40 @@ if (!function_exists('fnRet')) {
             \think\facade\Log::debug($calledClass);
         }
         return $resData;
+    }
+}
+
+if (!function_exists('array_merge_multiple'))
+{
+    /**
+     * 多维数组合并
+     * @param $array1
+     * @param $array2
+     * @return array
+     */
+    function array_merge_multiple($array1, $array2)
+    {
+        $merge = $array1 + $array2;
+        $data = [];
+        foreach ($merge as $key => $val) {
+            if (
+                isset($array1[$key])
+                && is_array($array1[$key])
+                && isset($array2[$key])
+                && is_array($array2[$key])
+            ) {
+                $data[$key] = array_merge_multiple($array1[$key], $array2[$key]);
+            } else {
+                $data[$key] = isset($array2[$key]) ? $array2[$key] : $array1[$key];
+            }
+        }
+        return $data;
+    }
+}
+
+if (!function_exists('format_date')) {
+    function format_date($date, $end) {
+        $time = strtotime($date);
+        return date($end ? 'Y-m-d 23:59:59' : 'Y-m-d 00:00:00', $time);
     }
 }

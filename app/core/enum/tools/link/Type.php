@@ -1,6 +1,6 @@
 <?php
 
-namespace app\core\enum\toolsList;
+namespace app\core\enum\tools\link;
 
 class Type
 {

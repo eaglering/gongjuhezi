@@ -37,7 +37,12 @@ class MenuService
     public function getBreadcrumb($routeUri, $group)
     {
         if (empty($this->menus[$group])) return [];
-        return $this->getSubBreadcrumb($this->menus[$group], $routeUri);
+        $_ = $list = $this->getSubBreadcrumb($this->menus[$group], $routeUri);
+        $last = array_pop($_);
+        $subtitle = $last ? $last['title'] : '';
+        $last = array_pop($_);
+        $title = $last ? $last['title'] : '';
+        return compact('title', 'subtitle', 'list');
     }
 
     protected function getSubBreadcrumb($menus, $routeUri) {

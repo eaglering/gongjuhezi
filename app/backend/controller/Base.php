@@ -4,15 +4,19 @@ declare(strict_types=1);
 namespace app\backend\controller;
 
 use app\backend\facade\Menu;
+use app\backend\library\paginator\driver\Bootstrap;
 use app\core\controller\Controller;
 use think\facade\View;
+use think\Paginator;
 
 abstract class Base extends Controller
 {
-    private $controller;
-    private $action;
-    private $group;
-    private $routeUri;
+    protected $module;
+    protected $controller;
+    protected $action;
+    protected $group;
+    protected $routeUri;
+    protected $identifier;
 
     protected $noLayoutAction = [
         'passport/login'
@@ -24,7 +28,19 @@ abstract class Base extends Controller
     public function initialize()
     {
         $this->getRouteInfo();
+        $this->getUser();
         $this->layout();
+    }
+
+    /**
+     * 获取登录用户信息
+     */
+    protected function getUser()
+    {
+        $this->identifier = $this->request->middleware('identifier');
+        if ($this->identifier && empty($this->identifier['avatar'])) {
+            $this->identifier['avatar'] = "/static/{$this->module}/img/user" . rand(1, $this->identifier['id'] % 8 + 1) . '.jpg';
+        }
     }
 
     /**
@@ -35,18 +51,22 @@ abstract class Base extends Controller
     {
         if (!$this->request->isAjax()) {
             !in_array($this->routeUri, $this->noLayoutAction) && View::config(['layout_on' => true]);
-            $module = $this->app->http->getName();
-            $identifier = $this->request->middleware('identifier');
-            if ($identifier && empty($identifier['avatar'])) {
-                $identifier['avatar'] = "/static/{$module}/img/user" . rand(1, $identifier['id'] % 8 + 1) . '.jpg';
-            }
             View::assign([
-                'base_url' => '/' . $module,
+                'base_url' => '/' . $this->module,
                 'core_asset' => '/static',
-                'base_asset' => '/static/' . $module,
+                'base_asset' => '/static/' . $this->module,
                 'upload_url' => '/uploads',
                 'menus' => $this->menus(),
-                'user' => $identifier,
+                'user' => $this->identifier,
+                'breadcrumb' => $this->breadcrumb()
+            ]);
+        } else if ($this->request->isPjax()) {
+            View::assign([
+                'base_url' => '/' . $this->module,
+                'core_asset' => '/static',
+                'base_asset' => '/static/' . $this->module,
+                'upload_url' => '/uploads',
+                'user' => $this->identifier,
                 'breadcrumb' => $this->breadcrumb()
             ]);
         }
@@ -57,6 +77,8 @@ abstract class Base extends Controller
      */
     protected function getRouteInfo()
     {
+        // 模块名称
+        $this->module = $this->app->http->getName();
         // 控制器名称
         $this->controller = $this->request->controller(true);
         // 方法名称
@@ -93,12 +115,12 @@ abstract class Base extends Controller
         return $breadcrumb;
     }
 
-    protected function renderError($msg, $data = [], $url = null, $code = 0)
+    protected function renderError($msg, $url = null, $data = [], $code = 0)
     {
         return $this->renderJson(false, $code, $msg, $data, $url);
     }
 
-    protected function renderSuccess($msg, $data = [], $url = null, $code = 0)
+    protected function renderSuccess($msg = '', $data = [], $url = null, $code = 0)
     {
         return $this->renderJson(true, $code, $msg, $data, $url);
     }

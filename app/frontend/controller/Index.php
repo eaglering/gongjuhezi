@@ -3,7 +3,7 @@ declare (strict_types = 1);
 
 namespace app\frontend\controller;
 
-use app\core\enum\toolsList\Type as TypeEnum;
+use app\core\enum\link\Type as TypeEnum;
 use app\frontend\service\ToolsService;
 use think\App;
 
