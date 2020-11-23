@@ -33,7 +33,7 @@ class Link extends Base
 
     public function create()
     {
-        if ($this->request->isPjax()) {
+        if ($this->request->acceptHtml()) {
             return view();
         }
         $params = $this->request->post();
@@ -46,6 +46,11 @@ class Link extends Base
 
     public function update($id)
     {
+        if ($this->request->acceptHtml()) {
+            $view = $this->linkService->view($id);
+            $types = TypeEnum::data();
+            return view()->assign(compact('view', 'types'));
+        }
         $params = $this->request->post();
         $fn = $this->linkService->update($id, $params);
         if (!$fn['success']) {

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{$base_asset}/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="{$base_asset}/css/adminlte.min.css">
     <link rel="stylesheet" href="{$base_asset}/css/skin-black.min.css">
+    <script type="text/javascript" src="{$base_asset}/plugins/jquery/jquery.min.js"></script>
     <!--[if lt IE 9]>
     <script type="text/javascript" src="{$core_asset}/plugins/html5shiv.min.js"></script>
     <script type="text/javascript" src="{$core_asset}/plugins/respond.min.js"></script>
@@ -23,7 +24,6 @@
     </div>
     {include file="layout/footer" /}
 </div>
-<script type="text/javascript" src="{$base_asset}/plugins/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="{$base_asset}/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="{$base_asset}/plugins/jquery.slimscroll/jquery.slimscroll.min.js"></script>
 <script type="text/javascript" src="{$base_asset}/plugins/fastclick/lib/fastclick.js"></script>

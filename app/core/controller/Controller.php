@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace app\core\controller;
 
+use app\core\provider\Request;
 use think\App;
 use think\exception\ValidateException;
 use think\Validate;
@@ -14,7 +15,7 @@ abstract class Controller
 {
     /**
      * Request实例
-     * @var \think\Request
+     * @var Request
      */
     protected $request;
 

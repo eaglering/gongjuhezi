@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace app\backend\controller;
 
 use app\backend\facade\Menu;
-use app\backend\library\paginator\driver\Bootstrap;
 use app\core\controller\Controller;
 use think\facade\View;
-use think\Paginator;
 
 abstract class Base extends Controller
 {
@@ -49,7 +47,7 @@ abstract class Base extends Controller
      */
     protected function layout()
     {
-        if (!$this->request->isAjax()) {
+        if ($this->request->acceptHtml()) {
             !in_array($this->routeUri, $this->noLayoutAction) && View::config(['layout_on' => true]);
             View::assign([
                 'base_url' => '/' . $this->module,
@@ -57,15 +55,6 @@ abstract class Base extends Controller
                 'base_asset' => '/static/' . $this->module,
                 'upload_url' => '/uploads',
                 'menus' => $this->menus(),
-                'user' => $this->identifier,
-                'breadcrumb' => $this->breadcrumb()
-            ]);
-        } else if ($this->request->isPjax()) {
-            View::assign([
-                'base_url' => '/' . $this->module,
-                'core_asset' => '/static',
-                'base_asset' => '/static/' . $this->module,
-                'upload_url' => '/uploads',
                 'user' => $this->identifier,
                 'breadcrumb' => $this->breadcrumb()
             ]);

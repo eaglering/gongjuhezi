@@ -4,9 +4,9 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <button data-toggle-target="#filter-box" data-toggle-off="展开筛选" data-toggle-on="收起筛选" type="button" class="btn btn-flat btn-xs btn-default"><i class="fa fa-filter"></i> <span>收起筛选</span></button>
+                    <button data-toggle-target="#filter-box" data-toggle-off="展开筛选" data-toggle-on="收起筛选" type="button" class="btn btn-flat btn-sm btn-default"><i class="fa fa-filter"></i> <span>收起筛选</span></button>
                     <div class="pull-right">
-                        <button type="button" class="btn btn-flat btn-xs btn-primary"><i class="fa fa-plus"></i> 新增</button>
+                        <button type="button" class="btn btn-flat btn-sm btn-primary"><i class="fa fa-plus"></i> 新增</button>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -14,14 +14,14 @@
                     <form name="form" action="{:url('')}" data-pjax method="get" id="filter-box">
                         <input type="hidden" name="page" value="1"/>
                         <div class="row filter-box">
-                            <div class="col-xs-3 col-md-1">搜索：</div>
-                            <div class="col-xs-9 col-md-5">
+                            <div class="col-xs-3 col-md-2">搜索：</div>
+                            <div class="col-xs-9 col-md-4">
                                 <div class="form-group-sm form-inline">
-                                    <input type="text" name="keyword" class="form-control" style="width: 300px" placeholder="搜索标题|子标题|关键字" value="{$Request.get.keyword}">
+                                    <input type="text" name="keyword" class="form-control" style="width: 200px" placeholder="搜索标题|子标题|关键字" value="{$Request.get.keyword}">
                                 </div>
                             </div>
-                            <div class="col-xs-3 col-md-1">分类：</div>
-                            <div class="col-xs-9 col-md-5">
+                            <div class="col-xs-3 col-md-2">分类：</div>
+                            <div class="col-xs-9 col-md-4">
                                 <div class="checkable-btn-group" data-value="{$Request.get.type|default=-1}">
                                     <div class="checkable-btn">
                                         <input type="radio" name="type" value="-1">
@@ -35,8 +35,8 @@
                                     {/foreach}
                                 </div>
                             </div>
-                            <div class="col-xs-3 col-md-1">状态：</div>
-                            <div class="col-xs-9 col-md-5">
+                            <div class="col-xs-3 col-md-2">状态：</div>
+                            <div class="col-xs-9 col-md-4">
                                 <div class="checkable-btn-group" data-value="{$Request.get.is_publish|default=-1}">
                                     <div class="checkable-btn">
                                         <input type="radio" name="is_publish" value="-1">
@@ -52,8 +52,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-3 col-md-1">外链：</div>
-                            <div class="col-xs-9 col-md-5">
+                            <div class="col-xs-3 col-md-2">外链：</div>
+                            <div class="col-xs-9 col-md-4">
                                 <div class="checkable-btn-group" data-value="{$Request.get.is_external|default=-1}">
                                     <div class="checkable-btn">
                                         <input type="radio" name="is_external" value="-1">
@@ -69,10 +69,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-3 col-md-1">创建时间：</div>
-                            <div class="col-xs-9 col-md-11">
+                            <div class="col-xs-3 col-md-2">创建时间：</div>
+                            <div class="col-xs-9 col-md-21">
                                 <div class="form-group-sm form-inline">
-                                    <input type="text" class="form-control" readonly placeholder="请选择创建时间" style="width: 300px"
+                                    <input type="text" class="form-control" readonly placeholder="请选择创建时间" style="width: 200px"
                                            name="created_at" value="{$Request.get.created_at}"
                                            data-widget="daterangepicker" data-from="created_at_from" data-to="created_at_to">
                                     <input type="hidden" name="created_at_from"/>
@@ -123,7 +123,7 @@
                                 <small>收藏：{$view.favorite}</small>
                             </td>
                             <td>
-                                <a class="btn btn-xs btn-flat btn-primary" href="{:url('view', ['id'=>$view.id])}" data-pjax><i class="fa fa-edit"></i> 编辑</a>
+                                <a class="btn btn-xs btn-flat btn-primary" href="{:url('update', ['id'=>$view.id])}" data-pjax><i class="fa fa-edit"></i> 编辑</a>
                                 <button class="btn btn-xs btn-flat btn-danger" data-ajax data-url="{:url('delete', ['id'=>$view.id])}" data-body="确定要删除【{$view.title}】吗？"><i class="fa fa-trash-o"></i> 删除</button>
                             </td>
                         </tr>
