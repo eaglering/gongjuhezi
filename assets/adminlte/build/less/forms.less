@@ -1,0 +1,157 @@
+/*
+ * Component: Form
+ * ---------------
+ */
+.form-control {
+  .border-radius(@input-radius);
+  box-shadow: none;
+  border-color: @gray-lte;
+  &:focus {
+    border-color: @light-blue;
+    box-shadow: none;
+  }
+  &::-moz-placeholder,
+  &:-ms-input-placeholder,
+  &::-webkit-input-placeholder {
+    color: #bbb;
+    opacity: 1;
+  }
+
+  &:not(select) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+}
+
+.form-group {
+  &.has-success {
+    label {
+      color: @green;
+    }
+    .form-control,
+    .input-group-addon {
+      border-color: @green;
+      box-shadow: none;
+    }
+    .help-block {
+      color: @green;
+    }
+  }
+
+  &.has-warning {
+    label {
+      color: @yellow;
+    }
+    .form-control,
+    .input-group-addon {
+      border-color: @yellow;
+      box-shadow: none;
+    }
+    .help-block {
+      color: @yellow;
+    }
+  }
+
+  &.has-error {
+    label {
+      color: @red;
+    }
+    .form-control,
+    .input-group-addon {
+      border-color: @red;
+      box-shadow: none;
+    }
+    .help-block {
+      color: @red;
+    }
+  }
+}
+
+/* Input group */
+.input-group {
+  .input-group-addon {
+    .border-radius(@input-radius);
+    border-color: @gray-lte;
+    background-color: #fff;
+  }
+}
+
+/* button groups */
+.btn-group-vertical {
+  .btn {
+    &.btn-flat:first-of-type, &.btn-flat:last-of-type {
+      .border-radius(0);
+    }
+  }
+}
+
+.icheck > label {
+  padding-left: 0;
+}
+
+/* support Font Awesome icons in form-control */
+.form-control-feedback.fa {
+  line-height: @input-height-base;
+}
+
+.input-lg + .form-control-feedback.fa,
+.input-group-lg + .form-control-feedback.fa,
+.form-group-lg .form-control + .form-control-feedback.fa {
+  line-height: @input-height-large;
+}
+
+.input-sm + .form-control-feedback.fa,
+.input-group-sm + .form-control-feedback.fa,
+.form-group-sm .form-control + .form-control-feedback.fa {
+  line-height: @input-height-small;
+}
+.checkable-btn-group {
+  .checkable-btn {
+    display:inline-block;
+    position: relative;
+    padding: 0 1em;
+    label {
+      font-weight: normal;
+      color: #adb5bd;
+      margin-bottom: 0;
+    }
+    input[type=radio], input[type=checkbox] {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: block;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+    }
+    input[type=radio]:checked+label, input[type=checkbox]:checked+label {
+      color: #3c8dbc;
+    }
+  }
+  .checkable-btn::after {
+    content: ' ';
+    width: 1px;
+    background-color: #adb5bd;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transform: scale(.5, .3);
+  }
+  .checkable-btn:first-child {
+    padding-left: 0;
+  }
+  .checkable-btn:last-child::after {
+    display: none;
+  }
+}
+.control-label.required {
+  &:before {
+    content: '*';
+    color: @btn-danger-bg;
+    margin-right: 3px;
+  }
+}
